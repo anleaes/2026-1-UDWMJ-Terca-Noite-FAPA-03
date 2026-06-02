@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Cadastro de Obra - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-10">
+    <div class="card app-card">
+      <div class="card-header d-flex align-items-center">
+        <i class="bi bi-cone-striped fs-4 me-2"></i>
+        <h4>Cadastro de Obra</h4>
+      </div>
+      <div class="card-body p-4">
+        <form action="" method="POST" enctype="multipart/form-data" novalidate>
+          {% csrf_token %}
+
+          <h6 class="text-uppercase text-muted mb-3">Informações Gerais</h6>
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label">Título</label>
+              {{ form.title }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Tipo</label>
+              {{ form.type }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Status</label>
+              {{ form.status }}
+            </div>
+          </div>
+
+          <h6 class="text-uppercase text-muted mt-4 mb-3">Datas e Valor</h6>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Data de início</label>
+              {{ form.start_date }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Previsão de término</label>
+              {{ form.expected_end_date }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Valor total (R$)</label>
+              {{ form.total_value }}
+            </div>
+          </div>
+
+          <h6 class="text-uppercase text-muted mt-4 mb-3">Vínculos</h6>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Localização</label>
+              {{ form.location }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Empresa</label>
+              {{ form.company }}
+            </div>
+            <div class="col-12">
+              <label class="form-label">
+                Funcionários
+                <small class="text-muted fw-normal">(segure Ctrl/Cmd para selecionar múltiplos)</small>
+              </label>
+              {{ form.employees }}
+            </div>
+          </div>
+
+          <h6 class="text-uppercase text-muted mt-4 mb-3">Anexos</h6>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Foto</label>
+              {{ form.photo }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Relatório</label>
+              {{ form.report }}
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+              <div class="form-check mb-2">
+                {{ form.is_completed }}
+                <label class="form-check-label">Concluída</label>
+              </div>
+            </div>
+          </div>
+
+          {% if form.errors %}
+            <div class="alert alert-danger mt-4">
+              <strong>Verifique os campos:</strong>
+              <ul class="mb-0">
+                {% for field, errors in form.errors.items %}
+                  {% for error in errors %}<li>{{ field }}: {{ error }}</li>{% endfor %}
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <a href="{% url 'constructions:list_constructions' %}" class="btn btn-outline-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check2-circle me-1"></i>Salvar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

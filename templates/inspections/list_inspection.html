@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}Inspeções - {{ construction.title }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="card app-card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center">
+      <a href="{% url 'constructions:list_constructions' %}" class="btn btn-light btn-sm me-2" title="Voltar">
+        <i class="bi bi-arrow-left"></i>
+      </a>
+      <i class="bi bi-clipboard-check fs-4 me-2"></i>
+      <div>
+        <h4 class="mb-0">Inspeções</h4>
+        <small>{{ construction.title }}</small>
+      </div>
+    </div>
+    <a href="{% url 'inspections:add_inspection' construction.id %}" class="btn btn-light btn-sm">
+      <i class="bi bi-plus-lg me-1"></i>Nova
+    </a>
+  </div>
+  <div class="card-body p-0">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th class="ps-4">#</th>
+            <th>Fiscal</th>
+            <th>Data da visita</th>
+            <th class="text-center">Status encontrado</th>
+            <th class="text-center">Pontuação</th>
+            <th class="text-center">Em conformidade</th>
+            <th class="text-end pe-4">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in inspections %}
+            <tr>
+              <td class="ps-4 text-muted">{{ item.id }}</td>
+              <td class="fw-semibold">{{ item.employee }}</td>
+              <td>{{ item.visit_date|date:"d/m/Y H:i" }}</td>
+              <td class="text-center">
+                {% if item.status_found == 'regular' %}
+                  <span class="badge bg-success">{{ item.get_status_found_display }}</span>
+                {% elif item.status_found == 'irregular' %}
+                  <span class="badge bg-danger">{{ item.get_status_found_display }}</span>
+                {% elif item.status_found == 'partial' %}
+                  <span class="badge bg-warning text-dark">{{ item.get_status_found_display }}</span>
+                {% elif item.status_found == 'critical' %}
+                  <span class="badge bg-dark">{{ item.get_status_found_display }}</span>
+                {% endif %}
+              </td>
+              <td class="text-center">
+                <span class="badge bg-secondary">{{ item.score }}</span>
+              </td>
+              <td class="text-center">
+                {% if item.is_compliant %}
+                  <span class="badge badge-soft-success"><i class="bi bi-check-circle me-1"></i>Sim</span>
+                {% else %}
+                  <span class="badge badge-soft-danger"><i class="bi bi-x-circle me-1"></i>Não</span>
+                {% endif %}
+              </td>
+              <td class="text-end pe-4">
+                <div class="btn-group btn-group-sm" role="group">
+                  {% if item.auditreport %}
+                    <a href="{% url 'audit_reports:edit_audit_report' construction.id item.id %}"
+                       class="btn btn-outline-success"
+                       title="Editar Laudo">
+                      <i class="bi bi-file-earmark-medical"></i>
+                    </a>
+                  {% else %}
+                    <a href="{% url 'audit_reports:add_audit_report' construction.id item.id %}"
+                       class="btn btn-outline-secondary"
+                       title="Criar Laudo">
+                      <i class="bi bi-file-earmark-plus"></i>
+                    </a>
+                  {% endif %}
+                  <a href="{% url 'inspections:edit_inspection' construction.id item.id %}"
+                     class="btn btn-outline-primary"
+                     title="Editar">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                  <a href="{% url 'inspections:delete_inspection' construction.id item.id %}"
+                     class="btn btn-outline-danger"
+                     title="Excluir"
+                     onclick="return confirm('Confirma a exclusão desta inspeção?');">
+                    <i class="bi bi-trash"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="7" class="text-center py-5 text-muted">
+                <i class="bi bi-clipboard-x fs-1 d-block mb-2"></i>
+                Nenhuma inspeção registrada para esta obra.
+                <div class="mt-2">
+                  <a href="{% url 'inspections:add_inspection' construction.id %}" class="btn btn-primary btn-sm">Registrar a primeira</a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Equipamentos Alocados - {{ construction.title }} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="card app-card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center">
+      <a href="{% url 'constructions:list_constructions' %}" class="btn btn-light btn-sm me-2" title="Voltar">
+        <i class="bi bi-arrow-left"></i>
+      </a>
+      <i class="bi bi-wrench-adjustable fs-4 me-2"></i>
+      <div>
+        <h4 class="mb-0">Equipamentos Alocados</h4>
+        <small class="text-muted">{{ construction.title }}</small>
+      </div>
+    </div>
+    <a href="{% url 'constructionequipments:add_constructionequipment' construction.id %}" class="btn btn-light btn-sm">
+      <i class="bi bi-plus-lg me-1"></i>Alocar
+    </a>
+  </div>
+  <div class="card-body p-0">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th class="ps-4">#</th>
+            <th>Equipamento</th>
+            <th>Tipo</th>
+            <th class="text-center">Diária (R$)</th>
+            <th class="text-center">Data de Alocação</th>
+            <th class="text-center">Data de Devolução</th>
+            <th class="text-center">Custo de Uso (R$)</th>
+            <th class="text-center">Status</th>
+            <th class="text-end pe-4">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for allocation in allocations %}
+            <tr>
+              <td class="ps-4 text-muted">{{ allocation.id }}</td>
+              <td class="fw-semibold">{{ allocation.equipment.name }}</td>
+              <td>{{ allocation.equipment.get_type_display }}</td>
+              <td class="text-center">R$ {{ allocation.equipment.daily_rate|floatformat:2 }}</td>
+              <td class="text-center">{{ allocation.allocation_date|date:"d/m/Y" }}</td>
+              <td class="text-center">
+                {% if allocation.return_date %}
+                  {{ allocation.return_date|date:"d/m/Y" }}
+                {% else %}
+                  <span class="text-muted">—</span>
+                {% endif %}
+              </td>
+              <td class="text-center">
+                {% if allocation.usage_cost %}
+                  R$ {{ allocation.usage_cost|floatformat:2 }}
+                {% else %}
+                  <span class="text-muted">—</span>
+                {% endif %}
+              </td>
+              <td class="text-center">
+                {% if allocation.return_date %}
+                  <span class="badge badge-soft-success">Devolvido</span>
+                {% else %}
+                  <span class="badge badge-soft-danger">Em uso</span>
+                {% endif %}
+              </td>
+              <td class="text-end pe-4">
+                <div class="btn-group btn-group-sm" role="group">
+                  <a href="{% url 'constructionequipments:edit_constructionequipment' construction.id allocation.id %}"
+                     class="btn btn-outline-primary"
+                     title="Editar">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                  <a href="{% url 'constructionequipments:delete_constructionequipment' construction.id allocation.id %}"
+                     class="btn btn-outline-danger"
+                     title="Excluir"
+                     onclick="return confirm('Confirma a remoção da alocação de {{ allocation.equipment.name }}? O equipamento será liberado.');">
+                    <i class="bi bi-trash"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="9" class="text-center py-5 text-muted">
+                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                Nenhum equipamento alocado nesta obra.
+                <div class="mt-2">
+                  <a href="{% url 'constructionequipments:add_constructionequipment' construction.id %}" class="btn btn-primary btn-sm">Alocar o primeiro</a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

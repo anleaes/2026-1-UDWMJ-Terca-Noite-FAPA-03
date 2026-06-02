@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if equipment %}Editar{% else %}Novo{% endif %} Equipamento - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="card app-card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center">
+      <a href="{% url 'equipments:list_equipments' company.id %}" class="btn btn-outline-secondary btn-sm me-2" title="Voltar">
+        <i class="bi bi-arrow-left"></i>
+      </a>
+      <i class="bi bi-tools fs-4 me-2"></i>
+      <div>
+        <h4 class="mb-0">{% if equipment %}Editar Equipamento{% else %}Novo Equipamento{% endif %}</h4>
+        <small class="text-muted">{{ company.corporate_name }}</small>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="{{ form.name.id_for_label }}" class="form-label">{{ form.name.label }}</label>
+          {{ form.name }}
+          {% if form.name.errors %}
+            <div class="invalid-feedback d-block">{{ form.name.errors }}</div>
+          {% endif %}
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="{{ form.type.id_for_label }}" class="form-label">{{ form.type.label }}</label>
+          {{ form.type }}
+          {% if form.type.errors %}
+            <div class="invalid-feedback d-block">{{ form.type.errors }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="{{ form.daily_rate.id_for_label }}" class="form-label">{{ form.daily_rate.label }}</label>
+          {{ form.daily_rate }}
+          {% if form.daily_rate.errors %}
+            <div class="invalid-feedback d-block">{{ form.daily_rate.errors }}</div>
+          {% endif %}
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <div class="form-check mt-4">
+            {{ form.is_available }}
+            <label class="form-check-label" for="{{ form.is_available.id_for_label }}">
+              {{ form.is_available.label }}
+            </label>
+            {% if form.is_available.errors %}
+              <div class="invalid-feedback d-block">{{ form.is_available.errors }}</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-check-lg me-1"></i>{% if equipment %}Atualizar{% else %}Salvar{% endif %}
+          </button>
+          <a href="{% url 'equipments:list_equipments' company.id %}" class="btn btn-secondary">
+            <i class="bi bi-x-lg me-1"></i>Cancelar
+          </a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

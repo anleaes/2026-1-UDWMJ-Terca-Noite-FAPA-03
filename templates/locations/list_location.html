@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Localizações - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="card app-card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center">
+      <i class="bi bi-geo-alt-fill fs-4 me-2"></i>
+      <h4>Localizações</h4>
+    </div>
+    <a href="{% url 'locations:add_location' %}" class="btn btn-light btn-sm">
+      <i class="bi bi-plus-lg me-1"></i>Nova
+    </a>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th class="ps-4">#</th>
+            <th>Nome</th>
+            <th>Bairro</th>
+            <th>Cidade</th>
+            <th class="text-center">Tipo</th>
+            <th class="text-center">Pavimentado</th>
+            <th class="text-end pe-4">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in itens %}
+            <tr>
+              <td class="ps-4 text-muted">{{ item.id }}</td>
+              <td class="fw-semibold">{{ item.name }}</td>
+              <td>{{ item.neighborhood }}</td>
+              <td>{{ item.city }}</td>
+              <td class="text-center">
+                <span class="badge bg-secondary">{{ item.get_type_display }}</span>
+              </td>
+              <td class="text-center">
+                {% if item.is_paved %}
+                  <span class="badge badge-soft-success"><i class="bi bi-check-circle me-1"></i>Sim</span>
+                {% else %}
+                  <span class="badge badge-soft-danger"><i class="bi bi-x-circle me-1"></i>Não</span>
+                {% endif %}
+              </td>
+              <td class="text-end pe-4">
+                <div class="btn-group btn-group-sm" role="group">
+                  <a href="{% url 'locations:edit_location' item.id %}"
+                     class="btn btn-outline-primary"
+                     title="Editar">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                  <a href="{% url 'locations:delete_location' item.id %}"
+                     class="btn btn-outline-danger"
+                     title="Excluir"
+                     onclick="return confirm('Confirma a exclusão da localização {{ item.name }}?');">
+                    <i class="bi bi-trash"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="7" class="text-center py-5 text-muted">
+                <i class="bi bi-geo fs-1 d-block mb-2"></i>
+                Nenhuma localização cadastrada.
+                <div class="mt-2">
+                  <a href="{% url 'locations:add_location' %}" class="btn btn-primary btn-sm">Cadastrar a primeira</a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

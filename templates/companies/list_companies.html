@@ -45,6 +45,16 @@
               </td>
               <td class="text-end pe-4">
                 <div class="btn-group btn-group-sm" role="group">
+                  <a href="{% url 'employees:list_employees' company.id %}"
+                     class="btn btn-outline-success"
+                     title="Funcionários">
+                    <i class="bi bi-people-fill"></i>
+                  </a>
+                  <a href="{% url 'equipments:list_equipments' company.id %}"
+                     class="btn btn-outline-info"
+                     title="Equipamentos">
+                    <i class="bi bi-tools"></i>
+                  </a>
                   <a href="{% url 'companies:edit_company' company.id %}"
                      class="btn btn-outline-primary"
                      title="Editar">

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if audit_report %}Editar{% else %}Novo{% endif %} Laudo - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="card app-card">
+  <div class="card-header d-flex align-items-center">
+    <a href="{% url 'inspections:list_inspection' construction.id %}" class="btn btn-light btn-sm me-2" title="Voltar">
+      <i class="bi bi-arrow-left"></i>
+    </a>
+    <i class="bi bi-file-earmark-medical fs-4 me-2"></i>
+    <div>
+      <h4 class="mb-0">{% if audit_report %}Editar Laudo de Auditoria{% else %}Novo Laudo de Auditoria{% endif %}</h4>
+      <small>{{ construction.title }} — Inspeção de {{ inspection.visit_date|date:"d/m/Y" }} ({{ inspection.employee }})</small>
+    </div>
+  </div>
+  <div class="card-body p-4">
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="{{ form.number.id_for_label }}" class="form-label">{{ form.number.label }} <span class="text-danger">*</span></label>
+          {{ form.number }}
+          {% if form.number.errors %}
+            <div class="invalid-feedback d-block">{{ form.number.errors }}</div>
+          {% endif %}
+        </div>
+
+        <div class="col-md-4">
+          <label for="{{ form.issue_date.id_for_label }}" class="form-label">{{ form.issue_date.label }} <span class="text-danger">*</span></label>
+          {{ form.issue_date }}
+          {% if form.issue_date.errors %}
+            <div class="invalid-feedback d-block">{{ form.issue_date.errors }}</div>
+          {% endif %}
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end pb-2">
+          <div class="form-check">
+            {{ form.is_approved }}
+            <label class="form-check-label" for="{{ form.is_approved.id_for_label }}">
+              {{ form.is_approved.label }}
+            </label>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <label for="{{ form.conclusion.id_for_label }}" class="form-label">{{ form.conclusion.label }} <span class="text-danger">*</span></label>
+          {{ form.conclusion }}
+          {% if form.conclusion.errors %}
+            <div class="invalid-feedback d-block">{{ form.conclusion.errors }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if form.errors %}
+        <div class="alert alert-danger mt-4">
+          <strong>Verifique os campos:</strong>
+          <ul class="mb-0">
+            {% for field, errors in form.errors.items %}
+              {% for error in errors %}<li>{{ field }}: {{ error }}</li>{% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <div class="d-flex justify-content-end gap-2 mt-4">
+        <a href="{% url 'inspections:list_inspection' construction.id %}" class="btn btn-outline-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-check2-circle me-1"></i>{% if audit_report %}Atualizar{% else %}Salvar{% endif %}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

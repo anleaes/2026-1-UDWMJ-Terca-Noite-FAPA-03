@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if allocation %}Editar{% else %}Alocar{% endif %} Equipamento - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="card app-card">
+  <div class="card-header d-flex align-items-center">
+    <a href="{% url 'constructionequipments:list_constructionequipment' construction.id %}" class="btn btn-outline-secondary btn-sm me-2" title="Voltar">
+      <i class="bi bi-arrow-left"></i>
+    </a>
+    <i class="bi bi-wrench-adjustable fs-4 me-2"></i>
+    <div>
+      <h4 class="mb-0">{% if allocation %}Editar Alocação{% else %}Alocar Equipamento{% endif %}</h4>
+      <small class="text-muted">{{ construction.title }}</small>
+    </div>
+  </div>
+  <div class="card-body p-4">
+    <form action="" method="POST" novalidate>
+      {% csrf_token %}
+
+      <div class="row g-3">
+        <div class="col-md-12">
+          <label class="form-label">Equipamento</label>
+          {{ form.equipment }}
+          {% if form.equipment.errors %}
+            <div class="invalid-feedback d-block">{{ form.equipment.errors }}</div>
+          {% endif %}
+          {% if not allocation %}
+            <small class="text-muted">Apenas equipamentos disponíveis da empresa <strong>{{ construction.company }}</strong> são listados.</small>
+          {% endif %}
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Data de Alocação</label>
+          {{ form.allocation_date }}
+          {% if form.allocation_date.errors %}
+            <div class="invalid-feedback d-block">{{ form.allocation_date.errors }}</div>
+          {% endif %}
+        </div>
+
+        {% if allocation %}
+        <div class="col-md-6">
+          <label class="form-label">Data de Devolução <span class="text-muted fw-normal">(preencher ao devolver)</span></label>
+          {{ form.return_date }}
+          {% if form.return_date.errors %}
+            <div class="invalid-feedback d-block">{{ form.return_date.errors }}</div>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        {% if allocation and allocation.usage_cost %}
+          <div class="col-md-6">
+            <label class="form-label">Custo de Uso Calculado</label>
+            <div class="form-control bg-light">R$ {{ allocation.usage_cost|floatformat:2 }}</div>
+            <small class="text-muted">Calculado automaticamente: diária × dias de uso.</small>
+          </div>
+        {% endif %}
+      </div>
+
+      {% if form.errors %}
+        <div class="alert alert-danger mt-4">
+          <strong>Verifique os campos:</strong>
+          <ul class="mb-0">
+            {% for field, errors in form.errors.items %}
+              {% for error in errors %}<li>{{ field }}: {{ error }}</li>{% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <div class="d-flex justify-content-end gap-2 mt-4">
+        <a href="{% url 'constructionequipments:list_constructionequipment' construction.id %}" class="btn btn-outline-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-check2-circle me-1"></i>{% if allocation %}Atualizar{% else %}Alocar{% endif %}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

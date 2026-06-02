@@ -25,6 +25,15 @@ urlpatterns = [
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('employees/', include('employees.urls', namespace='employees')),
     path('companies/', include('companies.urls', namespace='companies')),
+    path('citizens/', include('citizens.urls', namespace='citizens')),
+    path('constructions/', include('constructions.urls', namespace='constructions')),
+    path('contracts/', include('contracts.urls', namespace='contracts')),
+    path('locations/', include('locations.urls', namespace='locations')),
+    path('equipments/', include('equipments.urls', namespace='equipments')),
+    path('incidents/', include('incidents.urls', namespace='incidents')),
+    path('inspections/', include('inspections.urls', namespace='inspections')),
+    path('audit-reports/', include('audit_reports.urls', namespace='audit_reports')),
+    path('constructionequipments/', include('constructionequipments.urls', namespace='constructionequipments')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

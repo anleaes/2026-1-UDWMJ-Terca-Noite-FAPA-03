@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Incidentes - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="card app-card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center">
+      <i class="bi bi-exclamation-triangle-fill fs-4 me-2"></i>
+      <h4>Incidentes</h4>
+    </div>
+    <a href="{% url 'incidents:add_incident' %}" class="btn btn-light btn-sm">
+      <i class="bi bi-plus-lg me-1"></i>Novo
+    </a>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th class="ps-4">#</th>
+            <th>Tipo</th>
+            <th>Obra</th>
+            <th>Descrição</th>
+            <th>Data</th>
+            <th>Hora</th>
+            <th class="text-center">Severidade</th>
+            <th class="text-center">Status</th>
+            <th class="text-end pe-4">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for incident in incidents %}
+            <tr>
+              <td class="ps-4 text-muted">{{ incident.id }}</td>
+              <td>
+                <span class="badge badge-soft-info">{{ incident.get_type_display }}</span>
+              </td>
+              <td>{{ incident.construction }}</td>
+              <td>
+                <div class="text-truncate" style="max-width: 200px;" title="{{ incident.description }}">
+                  {{ incident.description }}
+                </div>
+              </td>
+              <td>{{ incident.occurred_at|date:"d/m/Y" }}</td>
+              <td>{{ incident.occurred_at|date:"H:i" }}</td>
+              <td class="text-center">
+                <span class="badge
+                  {% if incident.severity >= 5 %}badge-soft-danger{% elif incident.severity >= 3 %}badge-soft-warning{% else %}badge-soft-success{% endif %}">
+                  {{ incident.severity }}/5
+                </span>
+              </td>
+              <td class="text-center">
+                {% if incident.is_resolved %}
+                  <span class="badge badge-soft-success">Resolvido</span>
+                {% else %}
+                  <span class="badge badge-soft-warning">Aberto</span>
+                {% endif %}
+              </td>
+              <td class="text-end pe-4">
+                <div class="btn-group btn-group-sm" role="group">
+                  <a href="{% url 'incidents:edit_incident' incident.id %}"
+                     class="btn btn-outline-primary" title="Editar">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                  <a href="{% url 'incidents:delete_incident' incident.id %}"
+                     class="btn btn-outline-danger" title="Excluir"
+                     onclick="return confirm('Confirma a exclusão do incidente?');">
+                    <i class="bi bi-trash"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="9" class="text-center py-5 text-muted">
+                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                Nenhum incidente cadastrado.
+                <div class="mt-2">
+                  <a href="{% url 'incidents:add_incident' %}" class="btn btn-primary btn-sm">Cadastrar o primeiro</a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

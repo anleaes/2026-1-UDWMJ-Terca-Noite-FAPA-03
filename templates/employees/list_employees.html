@@ -1,19 +1,34 @@
 {% extends 'base.html' %}
 
-{% block title %}Funcionários - {{ block.super }}{% endblock %}
+{% block title %}Funcionários - {{ company.corporate_name }} - {{ block.super }}{% endblock %}
 
 {% block content %}
 <div class="card app-card">
   <div class="card-header d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center">
+      <a href="{% url 'companies:list_companies' %}" class="btn btn-light btn-sm me-2" title="Voltar">
+        <i class="bi bi-arrow-left"></i>
+      </a>
       <i class="bi bi-people-fill fs-4 me-2"></i>
-      <h4>Funcionários</h4>
+      <div>
+        <h4 class="mb-0">Funcionários</h4>
+        <small class="text-muted">{{ company.corporate_name }}</small>
+      </div>
     </div>
-    <a href="{% url 'employees:add_employee' %}" class="btn btn-light btn-sm">
+    <a href="{% url 'employees:add_employee' company.id %}" class="btn btn-light btn-sm">
       <i class="bi bi-plus-lg me-1"></i>Novo
     </a>
   </div>
   <div class="card-body p-0">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
     <div class="table-responsive">
       <table class="table table-hover align-middle mb-0">
         <thead>
@@ -39,7 +54,7 @@
               </td>
               <td>{{ employee.national_id }}</td>
               <td>{{ employee.get_position_display }}</td>
-              <td>R$ {{ employee.salary }}</td>
+              <td>R$ {{ employee.salary|floatformat:2 }}</td>
               <td>{{ employee.hire_date|date:"d/m/Y" }}</td>
               <td>
                 <div>{{ employee.email }}</div>
@@ -54,13 +69,15 @@
               </td>
               <td class="text-end pe-4">
                 <div class="btn-group btn-group-sm" role="group">
-                  <a href="{% url 'employees:edit_employee' employee.id %}"
-                     class="btn btn-outline-primary" title="Editar">
+                  <a href="{% url 'employees:edit_employee' company.id employee.id %}"
+                     class="btn btn-outline-primary"
+                     title="Editar">
                     <i class="bi bi-pencil"></i>
                   </a>
-                  <a href="{% url 'employees:delete_employee' employee.id %}"
-                     class="btn btn-outline-danger" title="Excluir"
-                     onclick="return confirm('Confirma a exclusão do funcionário {{ item.first_name }} {{ item.last_name }}?');">
+                  <a href="{% url 'employees:delete_employee' company.id employee.id %}"
+                     class="btn btn-outline-danger"
+                     title="Excluir"
+                     onclick="return confirm('Confirma a exclusão do funcionário {{ employee.first_name }} {{ employee.last_name }}?');">
                     <i class="bi bi-trash"></i>
                   </a>
                 </div>
@@ -70,9 +87,9 @@
             <tr>
               <td colspan="9" class="text-center py-5 text-muted">
                 <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-                Nenhum funcionário cadastrado.
+                Nenhum funcionário cadastrado para esta empresa.
                 <div class="mt-2">
-                  <a href="{% url 'employees:add_employee' %}" class="btn btn-primary btn-sm">Cadastrar o primeiro</a>
+                  <a href="{% url 'employees:add_employee' company.id %}" class="btn btn-primary btn-sm">Cadastrar o primeiro</a>
                 </div>
               </td>
             </tr>

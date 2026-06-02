@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
+from rest_framework import viewsets
+from .serializer import CompanySerializer
 from .forms import CompanyForm
 from .models import Company
 
@@ -42,3 +44,8 @@ def delete_company(request, id_company):
     company = get_object_or_404(Company, id=id_company)
     company.delete()
     return redirect('companies:list_companies')
+
+
+class CompanyViewSet(viewsets.ModelViewSet):
+    queryset = Company.objects.all()
+    serializer_class = CompanySerializer
