@@ -28,6 +28,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
+            {% if user.is_authenticated %}
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
@@ -38,7 +39,7 @@
                         <li><a class="dropdown-item" href="{% url 'companies:add_company' %}">Adicionar empresa</a></li>
                     </ul>
                 </li>
-<li class="nav-item dropdown">
+                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                         <i class="bi bi-geo-alt me-1"></i>Localizações
                     </a>
@@ -56,7 +57,7 @@
                         <li><a class="dropdown-item" href="{% url 'constructions:add_construction' %}">Adicionar obra</a></li>
                     </ul>
                 </li>
-<li class="nav-item dropdown">
+                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                         <i class="bi bi-exclamation-triangle me-1"></i>Incidentes
                     </a>
@@ -75,6 +76,7 @@
                     </ul>
                 </li>
             </ul>
+            {% endif %}
             <ul class="navbar-nav ms-auto">
                 {% if user.is_authenticated %}
                     <li class="nav-item d-flex align-items-center me-3">
@@ -100,7 +102,23 @@
 </nav>
 
 <div class="container mt-4">
-    {% block content %}{% endblock %}
+    {% if user.is_authenticated %}
+        {% block content %}{% endblock %}
+    {% else %}
+        <div class="d-flex justify-content-center mt-5">
+            <div class="card app-card text-center" style="max-width: 480px; width: 100%;">
+                <div class="card-header">
+                    <h4><i class="bi bi-lock me-2"></i>Acesso restrito</h4>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted mb-4">É necessário fazer login para acessar o sistema.</p>
+                    <a href="{% url 'accounts:login' %}" class="btn btn-primary">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Fazer login
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

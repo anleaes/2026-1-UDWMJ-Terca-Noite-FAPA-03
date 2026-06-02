@@ -10,9 +10,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            if hasattr(user, 'employee_profile'):
-                return redirect('employees:list_employees')
-            context['erro'] = 'Acesso restrito a funcionários.'
+            return redirect('core:home')
         else:
             context['erro'] = 'Usuário ou senha inválidos.'
     return render(request, 'accounts/login.html', context)
