@@ -29,8 +29,14 @@
       {% endfor %}
     {% endif %}
 
+    <div class="px-3 pt-3 pb-2">
+      <div class="input-group input-group-sm">
+        <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+        <input type="text" class="form-control" id="searchInput" placeholder="Buscar por palavra-chave..." autocomplete="off">
+      </div>
+    </div>
     <div class="table-responsive">
-      <table class="table table-hover align-middle mb-0">
+      <table class="table table-hover align-middle mb-0" id="dataTable">
         <thead>
           <tr>
             <th class="ps-4">#</th>
@@ -101,4 +107,13 @@
     </div>
   </div>
 </div>
+
+<script>
+document.getElementById('searchInput').addEventListener('input', function () {
+  const filter = this.value.toLowerCase();
+  document.querySelectorAll('#dataTable tbody tr').forEach(function (row) {
+    row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
+  });
+});
+</script>
 {% endblock %}
