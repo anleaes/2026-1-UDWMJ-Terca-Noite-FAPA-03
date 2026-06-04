@@ -10,6 +10,7 @@ router.register('', views.AuditReportViewSet, basename='audit_reports')
 urlpatterns = [
     path('<int:construction_id>/<int:inspection_id>/add/', views.add_audit_report, name='add_audit_report'),
     path('<int:construction_id>/<int:inspection_id>/edit/', views.edit_audit_report, name='edit_audit_report'),
+    path('<int:construction_id>/<int:inspection_id>/export-pdf/', views.export_audit_report_pdf, name='export_audit_report_pdf'),
     path('<int:construction_id>/<int:inspection_id>/delete/', views.delete_audit_report, name='delete_audit_report'),
     path('', include(router.urls)),
 ]
