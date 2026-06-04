@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
+from django.template.loader import render_to_string
 from rest_framework import viewsets
 from constructions.models import Construction
 from inspections.models import Inspection
@@ -46,6 +48,21 @@ def delete_audit_report(request, construction_id, inspection_id):
     audit_report = get_object_or_404(AuditReport, inspection=inspection)
     audit_report.delete()
     return redirect('inspections:list_inspection', construction_id=construction_id)
+
+def export_audit_report_pdf(request, construction_id, inspection_id):
+    construction = get_object_or_404(Construction, id=construction_id)
+    inspection = get_object_or_404(Inspection, id=inspection_id, construction=construction)
+    audit_report = get_object_or_404(AuditReport, inspection=inspection)
+
+    html_content = render_to_string('audit_reports/export_audit_report_pdf.html', {
+        'audit_report': audit_report,
+        'inspection': inspection,
+        'construction': construction,
+    })
+
+    response = HttpResponse(html_content, content_type='text/html')
+    response['Content-Disposition'] = f'inline; filename="laudo_{audit_report.number}.html"'
+    return response
 
 
 class AuditReportViewSet(viewsets.ModelViewSet):
