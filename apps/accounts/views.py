@@ -1,5 +1,9 @@
+import json
 from django.contrib.auth import authenticate, login, logout
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 
 def login_view(request):
@@ -19,3 +23,33 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('accounts:login')
+
+
+@csrf_exempt
+@require_POST
+def api_login(request):
+    try:
+        data = json.loads(request.body)
+    except (json.JSONDecodeError, ValueError):
+        return JsonResponse({'error': 'Payload inválido.'}, status=400)
+
+    user = authenticate(
+        request,
+        username=data.get('username', ''),
+        password=data.get('password', ''),
+    )
+    if user is not None:
+        login(request, user)
+        return JsonResponse({'ok': True, 'username': user.username})
+    return JsonResponse({'error': 'Usuário ou senha inválidos.'}, status=401)
+
+
+def api_me(request):
+    if request.user.is_authenticated:
+        return JsonResponse({'ok': True, 'username': request.user.username})
+    return JsonResponse({'ok': False}, status=401)
+
+
+def api_logout(request):
+    logout(request)
+    return JsonResponse({'ok': True})
