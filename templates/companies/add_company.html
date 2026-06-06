@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Cadastro de Empresa - {{ block.super }}{% endblock %}
 
@@ -60,4 +61,13 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/cnpj.js' %}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    setupCNPJField('id_corporate_tax_id');
+  });
+</script>
 {% endblock %}
