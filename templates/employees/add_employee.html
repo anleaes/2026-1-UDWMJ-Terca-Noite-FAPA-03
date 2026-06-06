@@ -98,9 +98,11 @@
 
 {% block scripts %}
 <script src="{% static 'js/cpf.js' %}"></script>
+<script src="{% static 'js/phone.js' %}"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     setupCPFField('id_national_id');
+    setupPhoneField('id_phone');
   });
 </script>
 {% endblock %}
