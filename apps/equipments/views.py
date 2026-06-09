@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
 from .serializer import EquipmentSerializer
 from companies.models import Company
@@ -7,6 +8,7 @@ from .models import Equipment
 from .forms import EquipmentForm
 
 
+@login_required
 def list_equipments(request, company_id):
     company = get_object_or_404(Company, id=company_id)
     equipments = Equipment.objects.filter(company=company)
@@ -17,6 +19,7 @@ def list_equipments(request, company_id):
     return render(request, 'equipments/list_equipments.html', context)
 
 
+@login_required
 def add_equipment(request, company_id):
     company = get_object_or_404(Company, id=company_id)
     template_name = 'equipments/add_equipment.html'
@@ -36,6 +39,7 @@ def add_equipment(request, company_id):
     return render(request, template_name, context)
 
 
+@login_required
 def edit_equipment(request, company_id, equipment_id):
     company = get_object_or_404(Company, id=company_id)
     equipment = get_object_or_404(Equipment, id=equipment_id, company=company)
@@ -54,6 +58,7 @@ def edit_equipment(request, company_id, equipment_id):
     return render(request, template_name, context)
 
 
+@login_required
 def delete_equipment(request, company_id, equipment_id):
     company = get_object_or_404(Company, id=company_id)
     equipment = get_object_or_404(Equipment, id=equipment_id, company=company)
