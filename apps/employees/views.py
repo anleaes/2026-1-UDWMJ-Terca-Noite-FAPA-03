@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
 from .serializer import EmployeeSerializer
 from .forms import EmployeeForm
@@ -7,6 +8,7 @@ from .models import Employee
 from companies.models import Company
 
 
+@login_required
 def list_employees(request, company_id):
     company = get_object_or_404(Company, id=company_id)
     employees = Employee.objects.filter(company=company)
@@ -14,6 +16,7 @@ def list_employees(request, company_id):
     return render(request, 'employees/list_employees.html', context)
 
 
+@login_required
 def add_employee(request, company_id):
     company = get_object_or_404(Company, id=company_id)
     template_name = 'employees/add_employee.html'
@@ -31,6 +34,7 @@ def add_employee(request, company_id):
     return render(request, template_name, {'form': form, 'company': company})
 
 
+@login_required
 def edit_employee(request, company_id, employee_id):
     company = get_object_or_404(Company, id=company_id)
     employee = get_object_or_404(Employee, id=employee_id, company=company)
@@ -46,6 +50,7 @@ def edit_employee(request, company_id, employee_id):
     return render(request, template_name, {'form': form, 'company': company, 'employee': employee})
 
 
+@login_required
 def delete_employee(request, company_id, employee_id):
     company = get_object_or_404(Company, id=company_id)
     employee = get_object_or_404(Employee, id=employee_id, company=company)
