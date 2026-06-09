@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from rest_framework import viewsets
@@ -9,6 +10,7 @@ from .models import AuditReport
 from .serializer import AuditReportSerializer
 
 
+@login_required
 def add_audit_report(request, construction_id, inspection_id):
     construction = get_object_or_404(Construction, id=construction_id)
     inspection = get_object_or_404(Inspection, id=inspection_id, construction=construction)
@@ -27,6 +29,7 @@ def add_audit_report(request, construction_id, inspection_id):
     return render(request, template_name, {'form': form, 'construction': construction, 'inspection': inspection})
 
 
+@login_required
 def edit_audit_report(request, construction_id, inspection_id):
     construction = get_object_or_404(Construction, id=construction_id)
     inspection = get_object_or_404(Inspection, id=inspection_id, construction=construction)
@@ -42,6 +45,7 @@ def edit_audit_report(request, construction_id, inspection_id):
     return render(request, template_name, {'form': form, 'construction': construction, 'inspection': inspection, 'audit_report': audit_report})
 
 
+@login_required
 def delete_audit_report(request, construction_id, inspection_id):
     construction = get_object_or_404(Construction, id=construction_id)
     inspection = get_object_or_404(Inspection, id=inspection_id, construction=construction)
@@ -49,6 +53,7 @@ def delete_audit_report(request, construction_id, inspection_id):
     audit_report.delete()
     return redirect('inspections:list_inspection', construction_id=construction_id)
 
+@login_required
 def export_audit_report_pdf(request, construction_id, inspection_id):
     construction = get_object_or_404(Construction, id=construction_id)
     inspection = get_object_or_404(Inspection, id=inspection_id, construction=construction)
