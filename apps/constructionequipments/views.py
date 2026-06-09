@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
 from constructions.models import Construction
 from equipments.models import Equipment
@@ -8,6 +9,7 @@ from .models import ConstructionEquipment
 from .serializer import ConstructionEquipmentSerializer
 
 
+@login_required
 def list_constructionequipment(request, construction_id):
     construction = get_object_or_404(Construction, id=construction_id)
     allocations = ConstructionEquipment.objects.filter(construction=construction)
@@ -21,6 +23,7 @@ def _available_equipment_queryset(company):
     return Equipment.objects.filter(pk__in=available_ids)
 
 
+@login_required
 def add_constructionequipment(request, construction_id):
     construction = get_object_or_404(Construction, id=construction_id)
     template_name = 'constructionequipments/add_constructionequipment.html'
@@ -42,6 +45,7 @@ def add_constructionequipment(request, construction_id):
     return render(request, template_name, {'form': form, 'construction': construction})
 
 
+@login_required
 def edit_constructionequipment(request, construction_id, constructionequipment_id):
     construction = get_object_or_404(Construction, id=construction_id)
     allocation = get_object_or_404(ConstructionEquipment, id=constructionequipment_id, construction=construction)
@@ -65,6 +69,7 @@ def edit_constructionequipment(request, construction_id, constructionequipment_i
     return render(request, template_name, {'form': form, 'construction': construction, 'allocation': allocation})
 
 
+@login_required
 def delete_constructionequipment(request, construction_id, constructionequipment_id):
     construction = get_object_or_404(Construction, id=construction_id)
     allocation = get_object_or_404(ConstructionEquipment, id=constructionequipment_id, construction=construction)
