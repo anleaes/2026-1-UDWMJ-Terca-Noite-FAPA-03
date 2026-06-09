@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
 from .serializer import CitizenSerializer
 from .forms import CitizenForm
 from .models import Citizen
 
 
+@login_required
 def add_citizen(request):
     template_name = 'citizens/add_citizen.html'
     if request.method == 'POST':
@@ -21,6 +23,7 @@ def add_citizen(request):
     return render(request, template_name, {'form': form})
 
 
+@login_required
 def list_citizens(request):
     template_name = 'citizens/list_citizens.html'
     citizens = Citizen.objects.filter()
@@ -28,6 +31,7 @@ def list_citizens(request):
     return render(request, template_name, context)
 
 
+@login_required
 def edit_citizen(request, id_citizen):
     template_name = 'citizens/add_citizen.html'
     citizen = get_object_or_404(Citizen, id=id_citizen)
@@ -42,6 +46,7 @@ def edit_citizen(request, id_citizen):
     return render(request, template_name, {'form': form, 'citizen': citizen})
 
 
+@login_required
 def delete_citizen(request, id_citizen):
     citizen = get_object_or_404(Citizen, id=id_citizen)
     citizen_name = f'{citizen.first_name} {citizen.last_name}'
