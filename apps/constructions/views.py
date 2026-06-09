@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
 from .serializer import ConstructionSerializer
 from .forms import ConstructionForm
 from .models import Construction
 
 
+@login_required
 def add_construction(request):
     template_name = 'constructions/add_construction.html'
     if request.method == 'POST':
@@ -19,6 +21,7 @@ def add_construction(request):
     return render(request, template_name, {'form': form})
 
 
+@login_required
 def list_constructions(request):
     template_name = 'constructions/list_constructions.html'
     constructions = Construction.objects.filter()
@@ -26,6 +29,7 @@ def list_constructions(request):
     return render(request, template_name, context)
 
 
+@login_required
 def edit_construction(request, id_construction):
     template_name = 'constructions/add_construction.html'
     construction = get_object_or_404(Construction, id=id_construction)
@@ -39,6 +43,7 @@ def edit_construction(request, id_construction):
     return render(request, template_name, {'form': form})
 
 
+@login_required
 def delete_construction(request, id_construction):
     construction = get_object_or_404(Construction, id=id_construction)
     construction.delete()
