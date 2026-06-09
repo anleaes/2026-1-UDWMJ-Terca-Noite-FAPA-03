@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
 from constructions.models import Construction
 from .forms import InspectionForm
@@ -6,6 +7,7 @@ from .models import Inspection
 from .serializer import InspectionSerializer
 
 
+@login_required
 def list_inspection(request, construction_id):
     construction = get_object_or_404(Construction, id=construction_id)
     inspections = Inspection.objects.filter(construction=construction)
@@ -13,6 +15,7 @@ def list_inspection(request, construction_id):
     return render(request, 'inspections/list_inspection.html', context)
 
 
+@login_required
 def add_inspection(request, construction_id):
     construction = get_object_or_404(Construction, id=construction_id)
     template_name = 'inspections/add_inspection.html'
@@ -30,6 +33,7 @@ def add_inspection(request, construction_id):
     return render(request, template_name, {'form': form, 'construction': construction})
 
 
+@login_required
 def edit_inspection(request, construction_id, id_inspection):
     construction = get_object_or_404(Construction, id=construction_id)
     inspection = get_object_or_404(Inspection, id=id_inspection, construction=construction)
@@ -46,6 +50,7 @@ def edit_inspection(request, construction_id, id_inspection):
     return render(request, template_name, {'form': form, 'construction': construction, 'inspection': inspection})
 
 
+@login_required
 def delete_inspection(request, construction_id, id_inspection):
     construction = get_object_or_404(Construction, id=construction_id)
     inspection = get_object_or_404(Inspection, id=id_inspection, construction=construction)
