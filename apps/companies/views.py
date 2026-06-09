@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
 from .serializer import CompanySerializer
 from .forms import CompanyForm
 from .models import Company
 
 
+@login_required
 def add_company(request):
     template_name = 'companies/add_company.html'
     if request.method == 'POST':
@@ -20,6 +21,7 @@ def add_company(request):
     return render(request, template_name, {'form': form})
 
 
+@login_required
 def list_companies(request):
     template_name = 'companies/list_companies.html'
     companies = Company.objects.filter()
@@ -27,6 +29,7 @@ def list_companies(request):
     return render(request, template_name, context)
 
 
+@login_required
 def edit_company(request, id_company):
     template_name = 'companies/add_company.html'
     company = get_object_or_404(Company, id=id_company)
@@ -40,6 +43,7 @@ def edit_company(request, id_company):
     return render(request, template_name, {'form': form})
 
 
+@login_required
 def delete_company(request, id_company):
     company = get_object_or_404(Company, id=id_company)
     company.delete()

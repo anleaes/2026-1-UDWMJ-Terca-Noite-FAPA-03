@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
 from .forms import ContractForm
 from .models import Contract
@@ -7,6 +8,7 @@ from .serializer import ContractSerializer
 from constructions.models import Construction
 
 
+@login_required
 def list_contracts(request, construction_id):
     construction = get_object_or_404(Construction, id=construction_id)
     contracts = Contract.objects.filter(construction=construction)
@@ -17,6 +19,7 @@ def list_contracts(request, construction_id):
     return render(request, 'contracts/list_contracts.html', context)
 
 
+@login_required
 def add_contract(request, construction_id):
     construction = get_object_or_404(Construction, id=construction_id)
     template_name = 'contracts/add_contract.html'
@@ -36,6 +39,7 @@ def add_contract(request, construction_id):
     return render(request, template_name, context)
 
 
+@login_required
 def edit_contract(request, construction_id, id_contract):
     construction = get_object_or_404(Construction, id=construction_id)
     contract = get_object_or_404(Contract, id=id_contract, construction=construction)
@@ -54,6 +58,7 @@ def edit_contract(request, construction_id, id_contract):
     return render(request, template_name, context)
 
 
+@login_required
 def delete_contract(request, construction_id, id_contract):
     construction = get_object_or_404(Construction, id=construction_id)
     contract = get_object_or_404(Contract, id=id_contract, construction=construction)

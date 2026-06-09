@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
 from .forms import IncidentForm
 from .models import Incident
 from .serializer import IncidentSerializer
 
 
+@login_required
 def add_incident(request):
     template_name = 'incidents/add_incident.html'
     if request.method == 'POST':
@@ -18,6 +20,7 @@ def add_incident(request):
     return render(request, template_name, {'form': form})
 
 
+@login_required
 def list_incidents(request):
     template_name = 'incidents/list_incidents.html'
     incidents = Incident.objects.filter()
@@ -25,6 +28,7 @@ def list_incidents(request):
     return render(request, template_name, context)
 
 
+@login_required
 def edit_incident(request, id_incident):
     template_name = 'incidents/add_incident.html'
     incident = get_object_or_404(Incident, id=id_incident)
@@ -38,6 +42,7 @@ def edit_incident(request, id_incident):
     return render(request, template_name, {'form': form})
 
 
+@login_required
 def delete_incident(request, id_incident):
     incident = get_object_or_404(Incident, id=id_incident)
     incident.delete()

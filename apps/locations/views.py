@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
 from .serializer import LocationSerializer
 from .forms import LocationForm
 from .models import Location
 
 
+@login_required
 def add_location(request):
     template_name = 'locations/add_location.html'
     if request.method == 'POST':
@@ -18,6 +20,7 @@ def add_location(request):
     return render(request, template_name, {'form': form})
 
 
+@login_required
 def list_location(request):
     template_name = 'locations/list_location.html'
     itens = Location.objects.filter()
@@ -25,6 +28,7 @@ def list_location(request):
     return render(request, template_name, context)
 
 
+@login_required
 def edit_location(request, id_location):
     template_name = 'locations/add_location.html'
     location = get_object_or_404(Location, id=id_location)
@@ -38,6 +42,7 @@ def edit_location(request, id_location):
     return render(request, template_name, {'form': form})
 
 
+@login_required
 def delete_location(request, id_location):
     location = get_object_or_404(Location, id=id_location)
     location.delete()
