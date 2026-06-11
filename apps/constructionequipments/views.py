@@ -83,3 +83,12 @@ def delete_constructionequipment(request, construction_id, constructionequipment
 class ConstructionEquipmentViewSet(viewsets.ModelViewSet):
     queryset = ConstructionEquipment.objects.all()
     serializer_class = ConstructionEquipmentSerializer
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        if instance.return_date:
+            days = (instance.return_date - instance.allocation_date).days
+            instance.usage_cost = instance.equipment.daily_rate * days
+            instance.save(update_fields=['usage_cost'])
+            instance.equipment.is_available = True
+            instance.equipment.save(update_fields=['is_available'])
