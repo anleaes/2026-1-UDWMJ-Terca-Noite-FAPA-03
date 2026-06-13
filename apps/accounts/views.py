@@ -40,13 +40,13 @@ def api_login(request):
     )
     if user is not None:
         login(request, user)
-        return JsonResponse({'ok': True, 'username': user.username})
+        return JsonResponse({'ok': True, 'username': user.username, 'is_admin': user.is_staff})
     return JsonResponse({'error': 'Usuário ou senha inválidos.'}, status=401)
 
 
 def api_me(request):
     if request.user.is_authenticated:
-        return JsonResponse({'ok': True, 'username': request.user.username})
+        return JsonResponse({'ok': True, 'username': request.user.username, 'is_admin': request.user.is_staff})
     return JsonResponse({'ok': False}, status=401)
 
 

@@ -12,5 +12,7 @@ urlpatterns = [
     path('list/', views.list_constructions, name='list_constructions'),
     path('edit/<int:id_construction>/', views.edit_construction, name='edit_construction'),
     path('delete/<int:id_construction>/', views.delete_construction, name='delete_construction'),
+    path('client/', views.client_construction_list, name='client_construction_list'),
+    path('client/<int:pk>/', views.client_construction_detail, name='client_construction_detail'),
     path('', include(router.urls)),
 ]
