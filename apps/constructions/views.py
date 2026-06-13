@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from rest_framework import viewsets
-from .serializer import ConstructionSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializer import ConstructionSerializer, ClientConstructionSerializer, ClientConstructionDetailSerializer
 from .forms import ConstructionForm
 from .models import Construction
 
@@ -53,3 +55,17 @@ def delete_construction(request, id_construction):
 class ConstructionViewSet(viewsets.ModelViewSet):
     queryset = Construction.objects.all()
     serializer_class = ConstructionSerializer
+
+
+@api_view(['GET'])
+def client_construction_list(request):
+    qs = Construction.objects.select_related('location').all()
+    data = ClientConstructionSerializer(qs, many=True, context={'request': request}).data
+    return Response(data)
+
+
+@api_view(['GET'])
+def client_construction_detail(request, pk):
+    obj = get_object_or_404(Construction.objects.select_related('location'), pk=pk)
+    data = ClientConstructionDetailSerializer(obj, context={'request': request}).data
+    return Response(data)
